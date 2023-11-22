@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Generation App</title>
+    <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #61dafb;
+        }
+
+        .container {
+            width: 70%;
+            max-width: 600px;
+            text-align: center;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            /* margin-bottom: 10px; */
+            overflow-y: auto;
+        }
+
+        /* Add this style to customize the scrollbar */
+        .container::-webkit-scrollbar {
+            width: 10px;
+            /* Set the width of the scrollbar */
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background-color: #61dafb;
+            /* Set the color of the scrollbar thumb (the draggable part) */
+            border-radius: 5px;
+            /* Set the border radius of the scrollbar thumb */
+        }
+
+        .container::-webkit-scrollbar-track {
+            background-color: #2b2b2b;
+            /* Set the color of the scrollbar track (the non-draggable part) */
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background-color: #4fa3e3;
+            /* Set the color of the scrollbar thumb on hover */
+        }
+
+
+        .generated-text {
+            font-size: 18px;
+            color: #ccc;
+            /* text-align: left; */
+        }
+
+        .product-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #61dafb;
+        }
+
+        .key-point {
+            margin-left: 1em;
+            color: #61dafb;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label,
+        input,
+        button {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        input,
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #61dafb;
+            color: #121212;
+            cursor: pointer;
+        }
+
+        #product {
+            background-color: white;
+        }
+
+        button {
+            font-weight: bold;
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        .span-cls {
+            background-color: #61dafb;
+            border-radius: 15px;
+            padding: 8px;
+            color: black;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Product Proposal Generation App</h1>
+    <p>Enter any products that are available, then click the <span class="span-cls">Generate Proposal</span> button!</p>
+
+    <div class="container">
+        <form action="/generate" method="POST">
+            <label for="product">Enter a product name:</label>
+            <input type="text" name="product" id="product" placeholder="Product Name" required>
+
+            <button type="submit">Generate Proposal</button>
+        </form>
+        <div class=" cont" style="text-align: left;">
+            {% if generated_text %}
+            <h2>Generated Proposal:</h2>
+            <div class="generated-text">
+                {% autoescape true %}
+                {% set lines = generated_text.split('\n') %}
+                {% for line in lines %}
+                {% if loop.first %}
+                <p class="product-name"><strong>{{ line | replace('**', '') }}</strong></p>
+                {% else %}
+                {% if line.startswith('*') %}
+                <p class="key-point">{{ line | replace('*', '') }}</p>
+                {% else %}
+                <p>{{ line }}</p>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endautoescape %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
